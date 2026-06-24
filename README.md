@@ -68,7 +68,7 @@ export GEMINI_API_KEY="your-api-key-here"
 python server.py
 ```
 
-Live URL(Deployed on Render): **(https://amipi-inventory-recommendation-tool.onrender.com/))](https://amipi-inventory-recommendation-tool.onrender.com/)**
+Live URL(Deployed on Render): https://amipi-inventory-recommendation-tool.onrender.com
 
 ---
 
