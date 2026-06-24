@@ -68,7 +68,7 @@ export GEMINI_API_KEY="your-api-key-here"
 python server.py
 ```
 
-Open your browser and navigate to: **[http://localhost:8000](http://localhost:8000)**
+Live URL(Deployed on Render): **[https://amipi-inventory-recommendation-tool.onrender.com/]([http://localhost:8000](https://amipi-inventory-recommendation-tool.onrender.com/))**
 
 ---
 
