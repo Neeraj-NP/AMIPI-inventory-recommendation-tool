@@ -1,0 +1,5 @@
+style_number,category,metal,stone_type,event,days_until_event,available_inventory,current_stock,on_order,last_90_day_sales,monthly_sales_rate,projected_demand_until_event,event_multiplier,recommended_stock_needed,suggested_order_qty,priority,recommendation,reason
+B601800-14REM,Ring,14R,Emerald and Diamond,Mother's Day,25,3,1,2,9,3.0,2.5,1.8,4.5,2,Medium,Reorder,Moderate demand with lean inventory warrants replenishment ahead of Mother's Day.
+B332200-14YSI,Necklace,14Y,Natural Diamond,Mother's Day,25,5,2,3,11,3.67,3.06,1.8,5.5,0,High,Reorder Urgently,Strong sales velocity and limited availability require urgent restocking before Mother's Day.
+B554433-18WVS,Pendant,18W,Natural Diamond,Mother's Day,25,5,2,3,16,5.33,4.44,1.8,8.0,3,High,Reorder Urgently,Strong sales velocity and limited availability require urgent restocking before Mother's Day.
+LB665544-14YSI,Necklace,14Y,Lab Grown Diamond,Mother's Day,25,6,1,5,19,6.33,5.28,1.8,9.5,4,High,Reorder Urgently,Strong sales velocity and limited availability require urgent restocking before Mother's Day.

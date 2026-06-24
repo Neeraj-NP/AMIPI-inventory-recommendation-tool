@@ -1,0 +1,22 @@
+[
+  {
+    "style_number": "LB888222-18WVS",
+    "category": "Ring",
+    "metal": "18W",
+    "stone_type": "Lab Grown Diamond",
+    "event": "JCK Vegas",
+    "days_until_event": 35,
+    "available_inventory": 8,
+    "current_stock": 2,
+    "on_order": 6,
+    "last_90_day_sales": 30,
+    "monthly_sales_rate": 10.0,
+    "projected_demand_until_event": 11.67,
+    "event_multiplier": 2.0,
+    "recommended_stock_needed": 23.33,
+    "suggested_order_qty": 15,
+    "priority": "High",
+    "recommendation": "Reorder Urgently",
+    "reason": "Strong sales velocity and limited availability require urgent restocking before JCK Vegas."
+  }
+]

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMIPI Merchandising Recommender | Fine Jewelry Restocking</title>
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="app-header">
+        <div class="header-logo">
+            <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12l4 6-10 13L2 9z"></path>
+                <path d="M11 3 8 9l4 13 4-13-3-6"></path>
+                <path d="M2 9h20"></path>
+            </svg>
+            <div class="logo-text">
+                <span class="brand-name">AMIPI</span>
+                <span class="app-tagline">Inventory Recommendation Engine</span>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="status-indicator-dot"></span>
+            <span class="status-text">Connected to API</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- KPI Metrics Ribbon -->
+        <section class="metrics-grid">
+            <div class="metric-card bg-glow-blue" id="kpi-total-items-card">
+                <div class="metric-title">Styles Reviewed</div>
+                <div class="metric-value" id="kpi-total-items">0</div>
+                <div class="metric-desc">Catalog items analyzed</div>
+            </div>
+            <div class="metric-card bg-glow-orange" id="kpi-total-order-card">
+                <div class="metric-title">Recommended Order Qty</div>
+                <div class="metric-value" id="kpi-total-order">0</div>
+                <div class="metric-desc">Total units to purchase</div>
+            </div>
+            <div class="metric-card" id="kpi-urgency-card">
+                <div class="metric-title">High Urgency Restocks</div>
+                <div class="metric-value color-high" id="kpi-high-urgency">0</div>
+                <div class="metric-desc">Require immediate ordering</div>
+            </div>
+            <div class="metric-card" id="kpi-total-events-card">
+                <div class="metric-title">Active Events</div>
+                <div class="metric-value" id="kpi-total-events">0</div>
+                <div class="metric-desc">Target trade shows & holidays</div>
+            </div>
+        </section>
+
+        <!-- Global Action & Config Bar -->
+        <section class="config-bar glass-panel">
+            <div class="config-left" style="display: none;">
+                <div class="toggle-group">
+                    <label class="switch">
+                        <input type="checkbox" id="ai-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="toggle-label-group">
+                        <span class="toggle-title">AI Reason Generator (Gemini)</span>
+                        <span class="toggle-subtitle">Generates natural language retail reasonings</span>
+                    </div>
+                </div>
+                <div class="api-key-input-container" id="api-key-container" style="display: none;">
+                    <input type="password" id="api-key" placeholder="Enter Gemini API Key" autocomplete="new-password">
+                    <span class="key-tooltip">Stored locally in memory</span>
+                </div>
+            </div>
+            <div class="config-right">
+                <button id="btn-add-style" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add Style
+                </button>
+                <button id="btn-recalculate" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                    Run Analysis
+                </button>
+                <button id="btn-save-data" class="btn btn-success">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Save Inventory
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle">
+                        Export As
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#" id="export-csv">CSV Spreadsheet</a>
+                        <a href="#" id="export-json">JSON Document</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar: Event Settings -->
+            <aside class="sidebar-multipliers glass-panel">
+                <div class="panel-header">
+                    <h3>Event Multipliers</h3>
+                    <button id="btn-save-multipliers" class="btn-text-action">Save CSV</button>
+                </div>
+                <p class="panel-intro-text">Adjust event multipliers below to dynamically recalculate restocking demand for corresponding items.</p>
+                <div class="multipliers-list" id="multipliers-container">
+                    <!-- Loaded dynamically -->
+                    <div class="multiplier-loader">Loading events...</div>
+                </div>
+            </aside>
+
+            <!-- Main Panel: Inventory Table -->
+            <section class="main-content-panel glass-panel">
+                <div class="table-header-controls">
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="Search by style, category, metal, stone...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="filter-event">
+                            <option value="">All Events</option>
+                            <!-- Loaded dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Priority Navigation Tabs -->
+                <div class="tabs-bar">
+                    <button class="tab-btn active" data-priority="ALL">All Items <span class="tab-badge" id="badge-all">0</span></button>
+                    <button class="tab-btn" data-priority="High">Reorder Urgently <span class="tab-badge bg-high" id="badge-high">0</span></button>
+                    <button class="tab-btn" data-priority="Medium">Reorder <span class="tab-badge bg-medium" id="badge-medium">0</span></button>
+                    <button class="tab-btn" data-priority="Low">Monitor <span class="tab-badge bg-low" id="badge-low">0</span></button>
+                    <button class="tab-btn" data-priority="Do Not Reorder">Hold <span class="tab-badge bg-hold" id="badge-hold">0</span></button>
+                </div>
+
+                <!-- Data Table Container -->
+                <div class="table-scroll-container">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 140px;">Style Code</th>
+                                <th style="width: 160px;">Specs</th>
+                                <th style="width: 150px;">Event Detail</th>
+                                <th class="num-col" style="width: 80px;">90-day Sales</th>
+                                <th class="num-col" style="width: 80px;">In Stock</th>
+                                <th class="num-col" style="width: 80px;">On Order</th>
+                                <th class="num-col" style="width: 80px;">Available</th>
+                                <th class="num-col highlight-header" style="width: 90px;">Suggest Order</th>
+                                <th style="width: 120px;">Priority</th>
+                                <th style="min-width: 350px;">Restock Business Rationale</th>
+                                <th style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <!-- Loaded dynamically -->
+                            <tr>
+                                <td colspan="11" class="loading-state">
+                                    <div class="pulse-loader"></div>
+                                    Retrieving inventory data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal: Add Style -->
+    <div class="modal" id="modal-add-style">
+        <div class="modal-content glass-panel animate-zoom">
+            <div class="modal-header">
+                <h2>Add Inventory Item</h2>
+                <button class="close-modal-btn" id="btn-close-modal">&times;</button>
+            </div>
+            <form id="add-style-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-style">Style Number *</label>
+                        <input type="text" id="form-style" required placeholder="e.g. LB888222-18WVS">
+                    </div>
+                    <div class="form-group">
+                        <label for="form-category">Category</label>
+                        <input type="text" id="form-category" placeholder="e.g. Ring, Pendant">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-metal">Metal Spec</label>
+                        <input type="text" id="form-metal" placeholder="e.g. 18W, 14Y, PT">
+                    </div>
+                    <div class="form-group">
+                        <label for="form-stone">Stone Type</label>
+                        <input type="text" id="form-stone" placeholder="e.g. Natural Diamond, Ruby">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-event">Upcoming Event *</label>
+                        <select id="form-event" required>
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-days">Days Until Event *</label>
+                        <input type="number" id="form-days" min="1" required placeholder="e.g. 35">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-sales">Last 90-day Sales *</label>
+                        <input type="number" id="form-sales" min="0" required placeholder="e.g. 15">
+                    </div>
+                    <div class="form-group">
+                        <label for="form-stock">Current Stock *</label>
+                        <input type="number" id="form-stock" min="0" required placeholder="e.g. 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="form-order">On Order *</label>
+                        <input type="number" id="form-order" min="0" required placeholder="e.g. 6">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add to Inventory</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Spinner / Progress Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="overlay-card glass-panel">
+            <div class="spinner"></div>
+            <h3 id="overlay-title">Processing Calculations</h3>
+            <p id="overlay-subtitle">Running logic engine formulas...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

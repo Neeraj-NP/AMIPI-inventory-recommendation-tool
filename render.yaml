@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: amipi-inventory-dashboard
+    env: python
+    plan: free # Can be upgraded to starter or standard
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false # Prompts you to enter your API key securely during setup
+      - key: PYTHONIOENCODING
+        value: utf-8
